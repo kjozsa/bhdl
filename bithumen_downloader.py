@@ -104,11 +104,27 @@ class BitHumenDownloader:
                     if len(cells) < 2:  # Need at least 2 cells
                         continue
                     
-                    # Get just the text from the second cell
-                    title = cells[1].text.strip()
-                    if title:
-                        results.append(title)
-                        print(f"Found torrent: {title}")
+                    # Get the title and download link from the second cell
+                    name_cell = cells[1]
+                    links = name_cell.find_elements(By.TAG_NAME, "a")
+                    if not links:
+                        continue
+                        
+                    # First link is usually the details link
+                    details_link = next((link for link in links if 'details.php' in link.get_attribute('href')), None)
+                    if not details_link:
+                        continue
+                        
+                    title = details_link.text.strip()
+                    if not title:
+                        continue
+                        
+                    # Store both title and details link
+                    results.append({
+                        'title': title,
+                        'details_url': details_link.get_attribute('href')
+                    })
+                    print(f"Found torrent: {title}")
                 except Exception as e:
                     print(f"Error parsing row: {str(e)}")
                     continue
@@ -123,16 +139,22 @@ class BitHumenDownloader:
             print(f"Search error: {str(e)}")
             return []
 
-    def download_torrent(self, torrent_link):
-        """Download a specific torrent file"""
+    def download_torrent(self, details_url):
+        """Download a torrent file from its details page"""
         try:
-            # Click the download link
-            torrent_link.click()
-            # Wait for download to complete
-            time.sleep(2)  # Adjust as needed
-            return True
+            # Navigate to the details page
+            self.driver.get(details_url)
+            
+            # Find and click the download link
+            download_link = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[href*='download.php']")))
+            if download_link:
+                download_link.click()
+                print("Started torrent download")
+                time.sleep(2)  # Wait for download to start
+                return True
+            return False
         except Exception as e:
-            print(f"Failed to download torrent: {str(e)}")
+            print(f"Error downloading torrent: {str(e)}")
             return False
 
     def close(self):
@@ -155,8 +177,8 @@ def main():
                 results = downloader.search(query)
                 if results:
                     print(f"\nFound {len(results)} results:")
-                    for i, title in enumerate(results, 1):
-                        print(f"{i}. {title}")
+                    for i, result in enumerate(results, 1):
+                        print(f"{i}. {result['title']}")
                     
                     # Ask user to select a torrent
                     while True:
@@ -167,8 +189,12 @@ def main():
                             
                             idx = int(choice) - 1
                             if 0 <= idx < len(results):
-                                print(f"Selected: {results[idx]}")
-                                # TODO: Implement download logic here
+                                selected = results[idx]
+                                print(f"Selected: {selected['title']}")
+                                if downloader.download_torrent(selected['details_url']):
+                                    print("Download completed successfully")
+                                else:
+                                    print("Failed to download torrent")
                                 break
                             else:
                                 print("Invalid selection, try again")
