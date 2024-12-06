@@ -15,11 +15,19 @@ class BitHumenDownloader:
         self.username = os.getenv('BITHUMEN_USERNAME')
         self.password = os.getenv('BITHUMEN_PASSWORD')
         self.download_dir = os.getenv('DOWNLOAD_DIR', os.path.join(os.path.expanduser('~'), 'Downloads'))
+        self.headless = os.getenv('HEADLESS', 'true').lower() == 'true'
         self.setup_driver()
 
     def setup_driver(self):
         """Initialize the Chrome WebDriver with custom options"""
         chrome_options = webdriver.ChromeOptions()
+        
+        # Headless mode settings if enabled
+        if self.headless:
+            chrome_options.add_argument('--headless=new')
+            chrome_options.add_argument('--no-sandbox')
+            chrome_options.add_argument('--disable-dev-shm-usage')
+        
         # Set download directory
         prefs = {
             "download.default_directory": self.download_dir,
@@ -84,15 +92,9 @@ class BitHumenDownloader:
             submit_button = self.driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Keresés']")
             submit_button.click()
             
-            # Wait for results table to load
-            time.sleep(2)
-            
             # Find the torrent table by its ID
-            results_table = self.driver.find_element(By.ID, "torrenttable")
-            if not results_table:
-                print("No results table found")
-                return []
-                
+            results_table = self.wait.until(EC.presence_of_element_located((By.ID, "torrenttable")))
+            
             # Get all rows except the header row (with colhead class)
             rows = results_table.find_elements(By.CSS_SELECTOR, "tr:not(.colhead)")
             
