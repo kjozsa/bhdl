@@ -36,19 +36,19 @@ def search():
         if downloader is None:
             init_downloader()
             
-        query = request.form.get('query')
+        query = request.form.get('query', '')
         if not query:
             logger.warning("Empty search query received")
-            return render_template('index.html', error="Please enter a search term")
+            return render_template('index.html', error="Please enter a search term", query=query)
             
         logger.info(f"Searching for: {query}")
         results = downloader.search(query)
         logger.success(f"Found {len(results)} results for query: {query}")
-        return render_template('index.html', results=results)
+        return render_template('index.html', results=results, query=query)
         
     except Exception as e:
         logger.exception(f"Search error occurred: {str(e)}")
-        return render_template('index.html', error=f"Search error: {str(e)}")
+        return render_template('index.html', error=f"Search error: {str(e)}", query=query)
 
 @app.route('/download', methods=['POST'])
 def download():

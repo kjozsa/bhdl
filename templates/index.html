@@ -21,9 +21,10 @@
         
         <h1 class="mb-4">BitHumen Torrent Search</h1>
         
-        <form method="POST" action="/search" class="mb-4">
+        <form method="POST" action="/search" class="mb-4" id="searchForm">
             <div class="input-group">
-                <input type="text" name="query" id="searchInput" class="form-control" placeholder="Enter search term..." value="{{ query }}" required>
+                <input type="text" name="query" id="searchInput" class="form-control" placeholder="Enter search term..." 
+                       value="{{ query|default('', true) }}" required autofocus>
                 <button type="submit" class="btn btn-primary">Search</button>
             </div>
         </form>
@@ -55,11 +56,27 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Focus the search input when page loads and after form submission
+        // Focus and select the search input when page loads
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('searchInput');
             searchInput.focus();
             searchInput.select();
+        });
+
+        // Prevent form from losing focus on submit
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            const searchInput = document.getElementById('searchInput');
+            // Store current input value and cursor position
+            const value = searchInput.value;
+            const selectionStart = searchInput.selectionStart;
+            const selectionEnd = searchInput.selectionEnd;
+            
+            // After a short delay, restore focus and selection
+            setTimeout(function() {
+                searchInput.focus();
+                searchInput.value = value;
+                searchInput.setSelectionRange(selectionStart, selectionEnd);
+            }, 0);
         });
 
         function showNotification(message, type = 'success') {
