@@ -6,15 +6,24 @@
     <style>
         body { padding: 20px; }
         .results-container { margin-top: 20px; }
+        #notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div id="notification" class="alert alert-success"></div>
+        
         <h1 class="mb-4">BitHumen Torrent Search</h1>
         
         <form method="POST" action="/search" class="mb-4">
             <div class="input-group">
-                <input type="text" name="query" class="form-control" placeholder="Enter search term..." required>
+                <input type="text" name="query" id="searchInput" class="form-control" placeholder="Enter search term..." value="{{ query }}" required>
                 <button type="submit" class="btn btn-primary">Search</button>
             </div>
         </form>
@@ -31,10 +40,7 @@
                 <div class="list-group-item">
                     <div class="d-flex justify-content-between align-items-center">
                         <span>{{ result.title }}</span>
-                        <form method="POST" action="/download" style="display: inline;">
-                            <input type="hidden" name="details_url" value="{{ result.details_url }}">
-                            <button type="submit" class="btn btn-success btn-sm">Download</button>
-                        </form>
+                        <button onclick="downloadTorrent('{{ result.details_url }}')" class="btn btn-success btn-sm">Download</button>
                     </div>
                 </div>
                 {% endfor %}
@@ -48,5 +54,47 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Focus the search input when page loads and after form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.focus();
+            searchInput.select();
+        });
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `alert alert-${type}`;
+            notification.style.display = 'block';
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        function downloadTorrent(detailsUrl) {
+            fetch('/download', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'details_url=' + encodeURIComponent(detailsUrl)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showNotification(data.message, 'success');
+                } else {
+                    showNotification(data.message, 'danger');
+                }
+            })
+            .catch(error => {
+                showNotification('Error downloading torrent: ' + error, 'danger');
+                console.error('Download error:', error);
+            });
+        }
+    </script>
 </body>
 </html>

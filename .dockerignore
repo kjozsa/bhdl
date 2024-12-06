@@ -1,0 +1,8 @@
+.env
+.env.template
+.git
+.gitignore
+__pycache__
+*.pyc
+downloads/
+README.md
