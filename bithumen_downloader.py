@@ -40,14 +40,13 @@ class BitHumenDownloader:
             "profile.default_content_setting_values.automatic_downloads": 1
         }
         chrome_options.add_experimental_option("prefs", prefs)
+        chrome_options.binary_location = "/usr/bin/google-chrome-stable"
         
         # Ensure download directory exists and has proper permissions
         os.makedirs(self.download_dir, exist_ok=True)
         logger.info(f"Created download directory: {self.download_dir}")
         
-        # Create service with explicit chromedriver path
-        service = Service('/usr/bin/chromedriver')
-        self.driver = webdriver.Chrome(service=service, options=chrome_options)
+        self.driver = webdriver.Chrome(options=chrome_options)
         self.wait = WebDriverWait(self.driver, 10)
         logger.success("Chrome WebDriver initialized successfully")
 
@@ -106,6 +105,17 @@ class BitHumenDownloader:
             search_input = self.driver.find_element(By.NAME, "search")
             search_input.clear()
             search_input.send_keys(query)
+            
+            # Select the required categories
+            categories = ['c25', 'c41', 'c37', 'c5', 'c39', 'c42']
+            for category in categories:
+                try:
+                    checkbox = self.driver.find_element(By.NAME, category)
+                    if not checkbox.is_selected():
+                        checkbox.click()
+                        logger.debug(f"Selected category: {category}")
+                except Exception as e:
+                    logger.warning(f"Failed to select category {category}: {str(e)}")
             
             # Find and click the submit button
             submit_button = self.driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Keresés']")
