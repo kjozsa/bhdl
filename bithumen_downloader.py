@@ -22,13 +22,13 @@ class BitHumenDownloader:
 
     def setup_driver(self):
         """Initialize the Chrome WebDriver with custom options"""
-        chrome_options = webdriver.ChromeOptions()
+        options = webdriver.ChromeOptions()
         
-        # Get Chrome flags from environment or use defaults
-        chrome_flags = os.getenv('CHROME_FLAGS', '--headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu')
-        for flag in chrome_flags.split():
-            chrome_options.add_argument(flag)
-        logger.debug(f"Chrome flags: {chrome_flags}")
+        # Set required options for headless operation
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--remote-debugging-port=9222')
         
         # Set download directory and preferences
         prefs = {
@@ -39,14 +39,17 @@ class BitHumenDownloader:
             "profile.default_content_settings.popups": 0,
             "profile.default_content_setting_values.automatic_downloads": 1
         }
-        chrome_options.add_experimental_option("prefs", prefs)
-        chrome_options.binary_location = "/usr/bin/google-chrome-stable"
+        options.add_experimental_option("prefs", prefs)
         
         # Ensure download directory exists and has proper permissions
         os.makedirs(self.download_dir, exist_ok=True)
         logger.info(f"Created download directory: {self.download_dir}")
         
-        self.driver = webdriver.Chrome(options=chrome_options)
+        # Initialize the service with explicit chromedriver path
+        service = Service('/usr/bin/chromedriver')
+        
+        # Initialize the driver with service and options
+        self.driver = webdriver.Chrome(service=service, options=options)
         self.wait = WebDriverWait(self.driver, 10)
         logger.success("Chrome WebDriver initialized successfully")
 
