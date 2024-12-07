@@ -40,13 +40,14 @@ class BitHumenDownloader:
             "profile.default_content_setting_values.automatic_downloads": 1
         }
         chrome_options.add_experimental_option("prefs", prefs)
-        chrome_options.binary_location = "/usr/bin/google-chrome-stable"
         
         # Ensure download directory exists and has proper permissions
         os.makedirs(self.download_dir, exist_ok=True)
         logger.info(f"Created download directory: {self.download_dir}")
         
-        self.driver = webdriver.Chrome(options=chrome_options)
+        # Create service with explicit chromedriver path
+        service = Service('/usr/bin/chromedriver')
+        self.driver = webdriver.Chrome(service=service, options=chrome_options)
         self.wait = WebDriverWait(self.driver, 10)
         logger.success("Chrome WebDriver initialized successfully")
 
