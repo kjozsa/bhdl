@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Server Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            min-height: 100vh;
+            background: #f8f9fa;
+        }
+        .dashboard-card {
+            height: 200px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .bg-modern-red {
+            background-color: #ff4d4d !important;
+        }
+        .bg-modern-orange {
+            background-color: #ff7f2a !important;
+        }
+        .bg-modern-yellow {
+            background-color: #ffc107 !important;
+        }
+        .bg-modern-green {
+            background-color: #00cc88 !important;
+        }
+        .bg-modern-blue {
+            background-color: #3399ff !important;
+        }
+        .bg-modern-purple {
+            background-color: #9933ff !important;
+        }
+        .bg-modern-black {
+            background-color: #222222 !important;
+        }
+        @media (max-width: 992px) {
+            .dashboard-card {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="dashboard-card bg-modern-red text-white rounded" onclick="window.location.href='http://192.168.0.2/admin/'">
+                    <i class="bi bi-shield-check card-icon"></i>
+                    <h5 class="card-title">PiHole</h5>
+                    <span class="text-light">DNS + DHCP</span>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="dashboard-card bg-modern-orange text-white rounded" onclick="window.location.href='http://192.168.0.2:5000'">
+                    <i class="bi bi-cloud-download card-icon"></i>
+                    <h5 class="card-title">Bithumen</h5>
+                    <span class="text-light">Torrent Search</span>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="dashboard-card bg-modern-blue text-white rounded" onclick="window.location.href='http://192.168.0.2:9091'">
+                    <i class="bi bi-arrow-down-up card-icon"></i>
+                    <h5 class="card-title">Transmission</h5>
+                    <span class="text-light">Torrent Client</span>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="dashboard-card bg-modern-green text-white rounded" onclick="window.location.href='http://192.168.0.2:8080'">
+                    <i class="bi bi-wifi card-icon"></i>
+                    <h5 class="card-title">Unifi</h5>
+                    <span class="text-light">Network Controller</span>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="dashboard-card bg-modern-yellow text-white rounded" onclick="window.location.href='http://192.168.0.2:32400'">
+                    <i class="bi bi-play-circle card-icon"></i>
+                    <h5 class="card-title">Plex</h5>
+                    <span class="text-white">Media Server</span>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="dashboard-card bg-modern-purple text-white rounded" onclick="if(confirm('Are you sure you want to reboot the system?')) fetch('http://192.168.0.2:5000/reboot', {method: 'POST'})">
+                    <i class="bi bi-power card-icon"></i>
+                    <h5 class="card-title">Reboot</h5>
+                    <span class="text-light">System Control</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
