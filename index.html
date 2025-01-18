@@ -51,20 +51,17 @@
         .bg-modern-purple {
             background-color: #9933ff !important;
         }
-        .bg-modern-black {
-            background-color: #222222 !important;
-        }
         @media (max-width: 992px) {
             .dashboard-card {
-                height: 120px;
+                height: 100px;
             }
             .card-icon {
-                font-size: 2rem;
+                font-size: 1.8rem;
                 margin-bottom: 0.3rem;
             }
             .card-title {
-                font-size: 1.2rem;
-                margin-bottom: 0.3rem;
+                font-size: 1.1rem;
+                margin-bottom: 0.2rem;
             }
         }
     </style>
@@ -72,7 +69,7 @@
 <body>
     <div class="container py-3">
         <div class="row g-3">
-            <div class="col-6 col-lg-3">
+            <div class="col-12 col-lg-3">
                 <div class="dashboard-card bg-modern-red text-white rounded" onclick="window.location.href='http://192.168.0.2/admin/'">
                     <i class="bi bi-shield-check card-icon"></i>
                     <h5 class="card-title">PiHole</h5>
@@ -80,7 +77,7 @@
                 </div>
             </div>
             
-            <div class="col-6 col-lg-3">
+            <div class="col-12 col-lg-3">
                 <div class="dashboard-card bg-modern-orange text-white rounded" onclick="window.location.href='http://192.168.0.2:5000'">
                     <i class="bi bi-cloud-download card-icon"></i>
                     <h5 class="card-title">Bithumen</h5>
@@ -88,7 +85,7 @@
                 </div>
             </div>
             
-            <div class="col-6 col-lg-3">
+            <div class="col-12 col-lg-3">
                 <div class="dashboard-card bg-modern-blue text-white rounded" onclick="window.location.href='http://192.168.0.2:9091'">
                     <i class="bi bi-arrow-down-up card-icon"></i>
                     <h5 class="card-title">Transmission</h5>
@@ -96,7 +93,7 @@
                 </div>
             </div>
             
-            <div class="col-6 col-lg-3">
+            <div class="col-12 col-lg-3">
                 <div class="dashboard-card bg-modern-green text-white rounded" onclick="window.location.href='http://192.168.0.2:8080'">
                     <i class="bi bi-wifi card-icon"></i>
                     <h5 class="card-title">Unifi</h5>
@@ -104,7 +101,7 @@
                 </div>
             </div>
             
-            <div class="col-6 col-lg-3">
+            <div class="col-12 col-lg-3">
                 <div class="dashboard-card bg-modern-yellow text-white rounded" onclick="window.location.href='http://192.168.0.2:32400'">
                     <i class="bi bi-play-circle card-icon"></i>
                     <h5 class="card-title">Plex</h5>
@@ -112,7 +109,7 @@
                 </div>
             </div>
             
-            <div class="col-6 col-lg-3">
+            <div class="col-12 col-lg-3">
                 <div class="dashboard-card bg-modern-purple text-white rounded" onclick="if(confirm('Are you sure you want to reboot the system?')) fetch('http://192.168.0.2:5000/reboot', {method: 'POST'})">
                     <i class="bi bi-power card-icon"></i>
                     <h5 class="card-title">Reboot</h5>
