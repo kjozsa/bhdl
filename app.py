@@ -75,6 +75,16 @@ def download():
         logger.exception(f"Download error occurred: {str(e)}")
         return jsonify({'status': 'error', 'message': f'Download error: {str(e)}'})
 
+@app.route('/reboot', methods=['POST'])
+def reboot():
+    try:
+        logger.info("Reboot request received")
+        os.system('sudo systemctl reboot')
+        return jsonify({'status': 'success', 'message': 'Reboot initiated'})
+    except Exception as e:
+        logger.exception(f"Reboot error occurred: {str(e)}")
+        return jsonify({'status': 'error', 'message': f'Reboot error: {str(e)}'})
+
 if __name__ == '__main__':
     # Load environment variables
     load_dotenv()
