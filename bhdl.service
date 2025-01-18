@@ -1,0 +1,14 @@
+[Unit]
+Description=Python Service for BHDL
+After=network.target
+
+[Service]
+User=pi
+ExecStart=/bin/bash /srv/bhdl/start.sh
+WorkingDirectory=/srv/bhdl
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
